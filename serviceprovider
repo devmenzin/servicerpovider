@@ -1,0 +1,68 @@
+# Configurações do Registro
+$regContent = @"
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\ServiceProvider]
+"Class"=dword:00000008
+"DnsPriority"=dword:00000006
+"HostsPriority"=dword:00000005
+"NetbtPriority"=dword:00000007
+"LocalPriority"=dword:00000004
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSMQ\Parameters]
+"TCPNoDelay"=dword:00000001
+"IgnoreOSNameValidation"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]
+"IRPStackSize"=dword:00000032
+"SizReqBuf"=dword:00004410
+"Size"=dword:00000003
+"MaxWorkItems"=dword:00002000
+"MaxMpxCt"=dword:00000800
+"MaxCmds"=dword:00000800
+"DisableStrictNameChecking"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters]
+"DefaultTTL"=dword:000000ff
+"SackOpts"=dword:00000001
+"EnableICMPRedirect"=dword:00000001
+"DeadGWDetectDefault"=dword:00000001
+"TcpMaxDataRetransmissions"=dword:00000005
+"EnableDCA"=dword:00000001
+"EnableWsd"=dword:00000000
+"TcpTimedWaitDelay"=dword:0000001e
+"Tcp1323Opts"=dword:00000001
+"MaxUserPort"=dword:0000fffe
+"MaxFreeTcbs"=dword:0000ffff
+"TcpCreateAndConnectTcbRateLimitDepth"=dword:00000000
+"EnableIPAutoConfigurationLimits"=dword:000000ff
+"TCPMaxPortsExhausted"=dword:00000005
+"TCPMaxHalfOpen"=dword:00000001
+"TCPMaxHalfOpenRetried"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters]
+"CacheHashTableBucketSize"=dword:00000001
+"CacheHashTableSize"=dword:00000180
+"MaxCacheEntryTtlLimit"=dword:0000FA00
+"MaxSOACacheEntryTtlLimit"=dword:0000012D
+"NegativeCacheTime"=dword:00000000
+"NetFailureCacheTime"=dword:00000000
+"NegativeSOACacheTime"=dword:00000000
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters]
+"MaxCmds"=dword:0000001e
+"MaxThreads"=dword:0000001e
+"MaxCollectionCount"=dword:00000020
+"@
+
+# Caminho do arquivo .reg temporário
+$regFilePath = [System.IO.Path]::Combine($env:TEMP, 'custom_settings.reg')
+
+# Salva o conteúdo no arquivo .reg
+$regContent | Set-Content -Path $regFilePath -Force
+
+# Executa o arquivo .reg usando regedit.exe
+Start-Process "regedit.exe" -ArgumentList "/s `"$regFilePath`"" -Wait
+
+# Remove o arquivo .reg temporário após a execução
+Remove-Item -Path $regFilePath -Force
